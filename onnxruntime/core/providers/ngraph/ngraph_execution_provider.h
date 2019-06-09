@@ -22,7 +22,7 @@ struct NGRAPHExecutionProviderInfo {
 class NGRAPHExecutionProvider : public IExecutionProvider {
  public:
   explicit NGRAPHExecutionProvider(const NGRAPHExecutionProviderInfo& info);
-  ~NGRAPHExecutionProvider() = default;
+  ~NGRAPHExecutionProvider() override = default;
 
   Status CopyTensor(const Tensor& src, Tensor& dst) const override;
 

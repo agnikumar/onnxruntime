@@ -25,7 +25,7 @@ TVMGraph::TensorDescriptor::TensorDescriptor(MLDataType type, onnxruntime::Provi
 
 class IdGenerator {
  public:
-  IdGenerator() {}
+  IdGenerator() = default;
   int GetNext() {
     return cur_++;
   }

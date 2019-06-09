@@ -9,12 +9,12 @@ namespace onnxruntime {
 class CUDAFence : public IFence {
  public:
   CUDAFence(const CUDAExecutionProvider* provider);
-  virtual ~CUDAFence();
-  virtual void BeforeUsingAsInput(onnxruntime::ProviderType provider_type, int queue_id) override;
-  virtual void BeforeUsingAsOutput(onnxruntime::ProviderType provider_type, int queue_id) override;
-  virtual void AfterUsedAsInput(int queue_id) override;
-  virtual void AfterUsedAsOutput(int queue_id) override;
-  virtual bool CanRelease() override;
+  ~CUDAFence() override;
+  void BeforeUsingAsInput(onnxruntime::ProviderType provider_type, int queue_id) override;
+  void BeforeUsingAsOutput(onnxruntime::ProviderType provider_type, int queue_id) override;
+  void AfterUsedAsInput(int queue_id) override;
+  void AfterUsedAsOutput(int queue_id) override;
+  bool CanRelease() override;
 
  private:
   cudaEvent_t read_event_;
