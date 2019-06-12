@@ -51,8 +51,7 @@ static void chw_to_hwc(const float* input, size_t h, size_t w, png_bytep* output
     size_t t = c * stride;
     for (size_t i = 0; i != stride; ++i) {
       float f = input[t + i];
-      if (f < 0.f || f > 255.0f)
-        f = 0;
+      if (f < 0.f || f > 255.0f) f = 0;
       output_data[i * 3 + c] = (png_byte)f;
     }
   }
@@ -80,8 +79,7 @@ static int read_png_file(const char* input_file, size_t* height, size_t* width, 
   }
   buffer = (png_bytep)malloc(input_data_length);
   memset(buffer, 0, input_data_length);
-  if (png_image_finish_read(&image, NULL /*background*/, buffer,
-                            0 /*row_stride*/, NULL /*colormap*/) == 0) {
+  if (png_image_finish_read(&image, NULL /*background*/, buffer, 0 /*row_stride*/, NULL /*colormap*/) == 0) {
     return -1;
   }
   hwc_to_chw(buffer, image.height, image.width, out, output_count);
@@ -120,8 +118,8 @@ static int write_tensor_to_png_file(OrtValue* tensor, const char* output_file) {
   image.width = dims[3];
   chw_to_hwc(f, image.height, image.width, &model_output_bytes);
   int ret = 0;
-  if (png_image_write_to_file(&image, output_file, 0 /*convert_to_8bit*/,
-                              model_output_bytes, 0 /*row_stride*/, NULL /*colormap*/) == 0) {
+  if (png_image_write_to_file(&image, output_file, 0 /*convert_to_8bit*/, model_output_bytes, 0 /*row_stride*/,
+                              NULL /*colormap*/) == 0) {
     printf("write to '%s' failed:%s\n", output_file, image.message);
     ret = -1;
   }
@@ -129,9 +127,7 @@ static int write_tensor_to_png_file(OrtValue* tensor, const char* output_file) {
   return ret;
 }
 
-static void usage() {
-  printf("usage: <model_path> <input_file> <output_file> \n");
-}
+static void usage() { printf("usage: <model_path> <input_file> <output_file> \n"); }
 
 int run_inference(OrtSession* session, const char* input_file, const char* output_file) {
   size_t input_height;
@@ -153,7 +149,9 @@ int run_inference(OrtSession* session, const char* input_file, const char* outpu
   const size_t model_input_len = model_input_ele_count * sizeof(float);
 
   OrtValue* input_tensor = NULL;
-  ORT_ABORT_ON_ERROR(OrtCreateTensorWithDataAsOrtValue(allocator_info, model_input, model_input_len, input_shape, input_shape_len, ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT, &input_tensor));
+  ORT_ABORT_ON_ERROR(OrtCreateTensorWithDataAsOrtValue(allocator_info, model_input, model_input_len, input_shape,
+                                                       input_shape_len, ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT,
+                                                       &input_tensor));
   assert(input_tensor != NULL);
   int is_tensor;
   ORT_ABORT_ON_ERROR(OrtIsTensor(input_tensor, &is_tensor));
@@ -162,7 +160,8 @@ int run_inference(OrtSession* session, const char* input_file, const char* outpu
   const char* input_names[] = {"inputImage"};
   const char* output_names[] = {"outputImage"};
   OrtValue* output_tensor = NULL;
-  ORT_ABORT_ON_ERROR(OrtRun(session, NULL, input_names, (const OrtValue* const*)&input_tensor, 1, output_names, 1, &output_tensor));
+  ORT_ABORT_ON_ERROR(
+      OrtRun(session, NULL, input_names, (const OrtValue* const*)&input_tensor, 1, output_names, 1, &output_tensor));
   assert(output_tensor != NULL);
   ORT_ABORT_ON_ERROR(OrtIsTensor(output_tensor, &is_tensor));
   assert(is_tensor);
