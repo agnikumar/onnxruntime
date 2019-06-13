@@ -77,5 +77,17 @@ TEST(SqueezeOpTest, BadAxes) {
   // Expect failure.
   test.Run(OpTester::ExpectResult::kExpectFailure, "Dimension of input 0 must be 1 instead of 3", {kTensorrtExecutionProvider});
 }
+
+TEST(SqueezeOpTest, AllAxes) {
+  OpTester test("Squeeze");
+  // All axes - should be return empty tensor
+  test.AddAttribute("axes", std::vector<int64_t>{0, 1, 2});
+  test.AddInput<float>("data", {1, 1, 1}, std::vector<float>(1, 1.0f));
+  // Dummy data
+  test.AddOutput<float>("squeezed", {}, std::vector<float>(1, 1.0f));
+
+  // currently not working in TensorRT provider
+  test.Run(OpTester::ExpectResult::kExpectSuccess, "", {kTensorrtExecutionProvider});
+}
 }  // namespace test
 }  // namespace onnxruntime
