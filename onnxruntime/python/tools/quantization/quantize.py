@@ -1039,6 +1039,8 @@ def quantize(model, per_channel=True, nbits=8, quantization_mode=QuantizationMod
             }
     :return: ModelProto with quantization
     '''
+    print(input_quantization_params)
+
     if nbits == 8:
         input_qType = onnx_proto.TensorProto.UINT8
         weight_qType = onnx_proto.TensorProto.INT8 if asymmetric_input_types else onnx_proto.TensorProto.UINT8

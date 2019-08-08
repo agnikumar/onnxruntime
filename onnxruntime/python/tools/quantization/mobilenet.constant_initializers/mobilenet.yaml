@@ -1,0 +1,7 @@
+mobilenet_v1_100_224:
+  model: mobilenet_v1_1.0_224_frozen.pb  #mobilenet_v1_1.0_224.pb
+  input_get: get_beach
+  inputs:
+    "input:0": [1, 224, 224, 3]
+  outputs:
+    - MobilenetV1/Predictions/Reshape_1:0
